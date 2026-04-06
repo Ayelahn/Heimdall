@@ -1,46 +1,60 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { supabase } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
+import { useState } from "react";
+import { supabase } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  const router = useRouter()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [isSignUp, setIsSignUp] = useState(false)
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    setLoading(true)
-    setError('')
-
+    if (!email || !password) {
+      setError("Please enter your email and password.");
+      return;
+    }
+    setLoading(true);
+    setError("");
     if (isSignUp) {
-      const { error } = await supabase.auth.signUp({ email, password })
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
       if (error) {
-        setError(error.message)
+        setError(error.message);
       } else {
-        router.push('/dashboard')
+        setError("Check your email for a confirmation link.");
       }
     } else {
-      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
       if (error) {
-        setError(error.message)
-      } else {
-        router.push('/dashboard')
+        setError(error.message);
+      } else if (data.session) {
+        await supabase.auth.setSession(data.session);
+        router.refresh();
+        router.push("/dashboard");
       }
     }
-
-    setLoading(false)
-  }
+    setLoading(false);
+  };
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-950">
       <div className="w-full max-w-md bg-gray-900 rounded-xl p-8 border border-gray-800">
         <h1 className="text-2xl font-bold text-white mb-2">Heimdall</h1>
-        <p className="text-gray-400 mb-8">{isSignUp ? 'Create your account' : 'Sign in to continue'}</p>
-
+        <p className="text-gray-400 mb-8">
+          {isSignUp ? "Create your account" : "Sign in to continue"}
+        </p>
         <div className="space-y-4">
           <div>
             <label className="block text-sm text-gray-400 mb-1">Email</label>
@@ -52,7 +66,6 @@ export default function LoginPage() {
               placeholder="you@example.com"
             />
           </div>
-
           <div>
             <label className="block text-sm text-gray-400 mb-1">Password</label>
             <input
@@ -63,25 +76,28 @@ export default function LoginPage() {
               placeholder="••••••••"
             />
           </div>
-
           {error && <p className="text-red-400 text-sm">{error}</p>}
-
           <button
             onClick={handleSubmit}
             disabled={loading}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg transition-colors disabled:opacity-50"
           >
-            {loading ? 'Please wait...' : isSignUp ? 'Create account' : 'Sign in'}
+            {loading
+              ? "Please wait..."
+              : isSignUp
+                ? "Create account"
+                : "Sign in"}
           </button>
-
           <button
             onClick={() => setIsSignUp(!isSignUp)}
             className="w-full text-gray-400 hover:text-white text-sm transition-colors"
           >
-            {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
+            {isSignUp
+              ? "Already have an account? Sign in"
+              : "Don't have an account? Sign up"}
           </button>
         </div>
       </div>
     </main>
-  )
+  );
 }
