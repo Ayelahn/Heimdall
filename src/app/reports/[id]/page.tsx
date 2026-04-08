@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { createClient as createAdminClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
 
 export default async function ReportPage({
@@ -11,11 +12,21 @@ export default async function ReportPage({
 
   const { data: report } = await supabase
     .from("reports")
-    .select("*, findings(*), notes(*)")
+    .select("*")
     .eq("id", id)
     .single();
 
   if (!report) notFound();
+
+  const adminSupabase = createAdminClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  );
+
+  const { data: findings, error: findingsError } = await adminSupabase
+    .from("findings")
+    .select("*")
+    .eq("report_id", id);
 
   return (
     <main className="min-h-screen bg-gray-950 p-8">
@@ -59,6 +70,27 @@ export default async function ReportPage({
             </p>
           </div>
         </div>
+
+        {findings && findings.length > 0 && (
+          <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
+            <h2 className="text-white font-semibold mb-4">Findings</h2>
+            <div className="space-y-3">
+              {findings.map((f, i) => (
+                <div key={i} className="bg-gray-800 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-cyan-400 text-sm font-medium">
+                      {f.category}
+                    </span>
+                    <span className="text-gray-400 text-xs">
+                      +{f.severity_weight} pts
+                    </span>
+                  </div>
+                  <p className="text-gray-300 text-sm">{f.reason}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </main>
   );
