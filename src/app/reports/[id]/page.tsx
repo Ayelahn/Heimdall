@@ -28,6 +28,8 @@ export default async function ReportPage({
     .select("*")
     .eq("report_id", id);
 
+  console.log("findings:", findings, "error:", findingsError, "id:", id);
+
   return (
     <main className="min-h-screen bg-gray-950 p-8">
       <div className="max-w-2xl mx-auto space-y-6">
