@@ -1,6 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { createClient as createAdminClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
+import Link from "next/link";
+import DeleteReportButton from "@/components/DeleteReportButton";
 
 export default async function ReportPage({
   params,
@@ -54,6 +56,14 @@ export default async function ReportPage({
 
         <div className="flex items-start justify-between mb-2">
           <div>
+            <div className="flex items-center gap-4 mb-2">
+              <Link
+                href="/dashboard"
+                className="text-xs font-display tracking-widest text-[#64748B] hover:text-[#00F0FF] transition-colors"
+              >
+                ← DASHBOARD
+              </Link>
+            </div>
             <h1 className="font-display text-white text-2xl tracking-widest mb-1">
               THREAT REPORT
             </h1>
@@ -61,15 +71,18 @@ export default async function ReportPage({
               {formattedDate} · {formattedTime}
             </p>
           </div>
-          <div
-            className="px-4 py-2 rounded-lg border text-sm font-display tracking-widest"
-            style={{
-              background: severityColor.bg,
-              borderColor: severityColor.border,
-              color: severityColor.text,
-            }}
-          >
-            {report.severity.toUpperCase()}
+          <div className="flex items-center gap-3">
+            <DeleteReportButton reportId={report.id} />
+            <div
+              className="px-4 py-2 rounded-lg border text-sm font-display tracking-widest"
+              style={{
+                background: severityColor.bg,
+                borderColor: severityColor.border,
+                color: severityColor.text,
+              }}
+            >
+              {report.severity.toUpperCase()}
+            </div>
           </div>
         </div>
 

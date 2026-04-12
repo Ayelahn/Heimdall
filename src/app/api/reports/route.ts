@@ -2,6 +2,23 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { scoreInput } from "@/lib/scoring";
 
+const rateLimit = new Map<string, { count: number; resetAt: number }>()
+
+function checkRateLimit(userId: string): boolean {
+  const now = Date.now()
+  const limit = rateLimit.get(userId)
+
+  if (!limit || now > limit.resetAt) {
+    rateLimit.set(userId, { count: 1, resetAt: now + 60 * 60 * 1000 })
+    return true
+  }
+
+  if (limit.count >= 10) return false
+
+  limit.count++
+  return true
+}
+
 export async function POST(request: NextRequest) {
   const response = NextResponse.next();
 
@@ -41,12 +58,26 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  if (!checkRateLimit(user.id)) {
+    return NextResponse.json(
+      { error: 'Rate limit exceeded. Maximum 10 reports per hour.' },
+      { status: 429 }
+    )
+  }
+
   const body = await request.json();
   const { reportType, rawInput } = body;
 
   if (!reportType || !rawInput) {
     return NextResponse.json(
       { error: "Missing required fields" },
+      { status: 400 },
+    );
+  }
+
+  if (rawInput.length > 5000) {
+    return NextResponse.json(
+      { error: "Input too long. Maximum 5000 characters." },
       { status: 400 },
     );
   }

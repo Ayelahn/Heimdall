@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase/client";
+import Modal from "@/components/Modal";
 
 type Report = {
   id: string;
@@ -21,6 +22,7 @@ export default function Dashboard() {
   const [filter, setFilter] = useState("all");
   const [sort, setSort] = useState("newest");
   const [loading, setLoading] = useState(true);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchReports = async () => {
@@ -63,15 +65,10 @@ export default function Dashboard() {
     return result;
   }, [filter, sort, reports]);
 
-  const handleDelete = async (id: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const confirmed = window.confirm(
-      "Delete this report? This cannot be undone.",
-    );
-    if (!confirmed) return;
+  const handleDelete = async (id: string) => {
     await supabase.from("reports").delete().eq("id", id);
     setReports((prev) => prev.filter((r) => r.id !== id));
+    setDeleteId(null);
   };
 
   const urlCount = reports.filter((r) => r.report_type === "url").length;
@@ -93,14 +90,14 @@ export default function Dashboard() {
           </div>
           <Link
             href="/reports/new"
-            className="px-5 py-2.5 rounded-lg text-sm font-medium tracking-wide transition-all border"
+            className="px-5 py-2.5 rounded-xl text-xs font-display tracking-widest transition-all border"
             style={{
               background: "rgba(0,240,255,0.1)",
               borderColor: "rgba(0,240,255,0.3)",
               color: "#00F0FF",
             }}
           >
-            + New report
+            + NEW REPORT
           </Link>
         </div>
 
@@ -202,10 +199,14 @@ export default function Dashboard() {
                         <span className="text-[#64748B] text-xs">/100</span>
                       </span>
                       <button
-                        onClick={(e) => handleDelete(report.id, e)}
-                        className="opacity-0 group-hover:opacity-100 text-[#64748B] hover:text-red-400 transition-all text-xs px-2 py-1 rounded border border-transparent hover:border-red-500/20"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setDeleteId(report.id);
+                        }}
+                        className="opacity-0 group-hover:opacity-100 text-[#64748B] hover:text-red-400 transition-all text-xs px-2 py-1 rounded border border-transparent hover:border-red-500/20 font-display tracking-widest"
                       >
-                        Delete
+                        DELETE
                       </button>
                     </div>
                   </div>
@@ -225,6 +226,17 @@ export default function Dashboard() {
           </div>
         )}
       </div>
+      {deleteId && (
+        <Modal
+          title="DELETE REPORT"
+          message="This report and all its findings will be permanently deleted. This cannot be undone."
+          confirmLabel="Delete"
+          cancelLabel="Cancel"
+          danger={true}
+          onConfirm={() => handleDelete(deleteId)}
+          onCancel={() => setDeleteId(null)}
+        />
+      )}
     </main>
   );
 }
