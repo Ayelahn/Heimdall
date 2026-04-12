@@ -23,9 +23,9 @@ export default function Navbar() {
     <nav className="border-b border-[#1E293B] bg-[#0D131F] px-8 py-3">
       <div className="max-w-4xl mx-auto flex items-center justify-between">
         <Link href="/dashboard" className="flex items-center gap-3">
-          <HeimdallLogo size={36} />
+          <HeimdallLogo size={44} />
           <div className="flex flex-col">
-            <span className="font-display text-white text-base tracking-[0.15em] font-bold leading-none">
+            <span className="font-display text-white text-lg tracking-[0.15em] font-bold leading-none">
               HEIMDALL
             </span>
             <span className="text-[#00F0FF] text-[9px] tracking-[0.3em] uppercase leading-none mt-0.5">
