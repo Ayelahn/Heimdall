@@ -93,6 +93,13 @@ export default async function ReportPage({
             </div>
           </div>
         )}
+
+        {report.ai_analysis && (
+          <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
+            <h2 className="text-white font-semibold mb-3">AI Analysis</h2>
+            <p className="text-gray-300 text-sm leading-relaxed">{report.ai_analysis}</p>
+          </div>
+        )}
       </div>
     </main>
   );

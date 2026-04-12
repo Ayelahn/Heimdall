@@ -43,6 +43,35 @@ export async function POST(request: NextRequest) {
 
   const { score, severity, findings } = scoreInput(reportType, rawInput);
 
+  let aiAnalysis = "";
+  try {
+    const Anthropic = (await import("@anthropic-ai/sdk")).default;
+    const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+
+    const message = await anthropic.messages.create({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 300,
+      messages: [
+        {
+          role: "user",
+          content: `You are a cybersecurity analyst. Analyze this suspicious ${reportType} for scam or phishing indicators. Be concise and direct — 2-3 sentences maximum.
+
+Input: ${rawInput}
+
+Rules-based score: ${score}/100 (${severity} severity)
+
+Provide your threat assessment:`,
+        },
+      ],
+    });
+
+    aiAnalysis =
+      message.content[0].type === "text" ? message.content[0].text : "";
+  } catch (err) {
+    console.error("AI analysis failed:", err);
+    aiAnalysis = "AI analysis unavailable.";
+  }
+
   const { data: report, error } = await supabase
     .from("reports")
     .insert({
@@ -52,6 +81,7 @@ export async function POST(request: NextRequest) {
       risk_score: score,
       severity: severity,
       status: "new",
+      ai_analysis: aiAnalysis,
     })
     .select()
     .single();
