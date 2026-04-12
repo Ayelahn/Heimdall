@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { createClient as createAdmin } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
+import ReactMarkdown from "react-markdown";
 
 export default async function ReportPage({
   params,
@@ -33,7 +34,9 @@ export default async function ReportPage({
       <div className="max-w-2xl mx-auto space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-white mb-1">Report detail</h1>
-          <p className="text-gray-500 text-sm">ID: {report.id}</p>
+          <div className="text-gray-300 text-sm leading-relaxed prose prose-invert prose-sm max-w-none">
+            <ReactMarkdown>{report.ai_analysis}</ReactMarkdown>
+          </div>
         </div>
 
         <div className="bg-gray-900 rounded-xl p-6 border border-gray-800 space-y-4">
@@ -75,19 +78,28 @@ export default async function ReportPage({
           <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
             <h2 className="text-white font-semibold mb-4">Findings</h2>
             <div className="space-y-3">
-              {findings.map((f, i) => (
-                <div key={i} className="bg-gray-800 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-cyan-400 text-sm font-medium">
-                      {f.category}
-                    </span>
-                    <span className="text-gray-400 text-xs">
-                      +{f.severity_weight} pts
-                    </span>
+              {findings.map(
+                (
+                  f: {
+                    category: string;
+                    reason: string;
+                    severity_weight: number;
+                  },
+                  i: number,
+                ) => (
+                  <div key={i} className="bg-gray-800 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-cyan-400 text-sm font-medium">
+                        {f.category}
+                      </span>
+                      <span className="text-gray-400 text-xs">
+                        +{f.severity_weight} pts
+                      </span>
+                    </div>
+                    <p className="text-gray-300 text-sm">{f.reason}</p>
                   </div>
-                  <p className="text-gray-300 text-sm">{f.reason}</p>
-                </div>
-              ))}
+                ),
+              )}
             </div>
           </div>
         )}
