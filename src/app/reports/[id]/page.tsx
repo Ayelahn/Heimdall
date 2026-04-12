@@ -97,7 +97,13 @@ export default async function ReportPage({
         {report.ai_analysis && (
           <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
             <h2 className="text-white font-semibold mb-3">AI Analysis</h2>
-            <p className="text-gray-300 text-sm leading-relaxed">{report.ai_analysis}</p>
+            <p className="text-[#CBD5E1] text-sm leading-relaxed whitespace-pre-wrap">
+              {report.ai_analysis
+                .replace(/#{1,6}\s/g, '')
+                .replace(/\*\*(.*?)\*\*/g, '$1')
+                .replace(/\*(.*?)\*/g, '$1')
+              }
+            </p>
           </div>
         )}
       </div>
