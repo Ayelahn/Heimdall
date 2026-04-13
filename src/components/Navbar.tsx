@@ -14,7 +14,9 @@ export default function Navbar() {
   const [showSignOut, setShowSignOut] = useState(false);
 
   const handleSignOut = async () => {
+    setShowSignOut(false);
     await supabase.auth.signOut();
+    router.refresh();
     router.push("/login");
   };
 

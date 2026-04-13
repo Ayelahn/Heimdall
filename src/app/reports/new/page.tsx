@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 export default function NewReport() {
   const router = useRouter();
@@ -49,7 +50,12 @@ export default function NewReport() {
 
   return (
     <main className="min-h-screen bg-[#0A0E17] bg-grid-pattern p-8">
-      <div className="max-w-2xl mx-auto">
+      <motion.div
+        className="max-w-2xl mx-auto"
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="mb-8">
           <h1 className="font-display text-white text-2xl tracking-widest mb-1">
             NEW THREAT REPORT
@@ -152,7 +158,7 @@ export default function NewReport() {
             </div>
           ))}
         </div>
-      </div>
+      </motion.div>
     </main>
   );
 }

@@ -3,6 +3,7 @@ import { createClient as createAdminClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import DeleteReportButton from "@/components/DeleteReportButton";
+import { AnimatedSection } from "@/components/AnimatedSection";
 
 export default async function ReportPage({
   params,
@@ -52,7 +53,7 @@ export default async function ReportPage({
 
   return (
     <main className="min-h-screen bg-[#0A0E17] bg-grid-pattern p-8">
-      <div className="max-w-3xl mx-auto space-y-6">
+      <AnimatedSection className="max-w-3xl mx-auto space-y-6" y={24} duration={0.5}>
 
         <div className="flex items-start justify-between mb-2">
           <div>
@@ -86,6 +87,7 @@ export default async function ReportPage({
           </div>
         </div>
 
+        <AnimatedSection delay={0.1}>
         <div className="bg-[#0D131F] border border-[#1E293B] rounded-2xl p-6 space-y-5">
           <div className="grid grid-cols-3 gap-4">
             <div>
@@ -126,8 +128,10 @@ export default async function ReportPage({
             </div>
           </div>
         </div>
+        </AnimatedSection>
 
         {findings && findings.length > 0 && (
+          <AnimatedSection delay={0.2}>
           <div className="bg-[#0D131F] border border-[#1E293B] rounded-2xl p-6">
             <h2 className="font-display text-white text-sm tracking-widest mb-4">
               FINDINGS
@@ -160,9 +164,11 @@ export default async function ReportPage({
               )}
             </div>
           </div>
+          </AnimatedSection>
         )}
 
         {report.ai_analysis && (
+          <AnimatedSection delay={0.3}>
           <div className="bg-[#0D131F] border border-[#00F0FF]/20 rounded-2xl p-6">
             <h2 className="font-display text-[#00F0FF] text-sm tracking-widest mb-4">
               AI ANALYSIS
@@ -174,9 +180,10 @@ export default async function ReportPage({
                 .replace(/\*(.*?)\*/g, "$1")}
             </p>
           </div>
+          </AnimatedSection>
         )}
 
-      </div>
+      </AnimatedSection>
     </main>
   );
 }
