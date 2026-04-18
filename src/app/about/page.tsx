@@ -81,15 +81,18 @@ export default function About() {
             <p>
               Hey guys, my name is{" "}
               <span className="text-white font-medium">Aelan Valdez</span>.
-              currently im a Cybersecurity & Networking major working part-time
-              as a Geek Squad Technician, thanks for checking out my project
+              Currently a Cybersecurity & Networking major working part-time as
+              a Geek Squad Advanced Repair Agent. Thanks for checking out my
+              project.
             </p>
             <p>
-              Heimdall is my first full-stack web application, built in
-              preparation for <span className="text-[#00F0FF]">HackMesa</span> —
-              my first hackathon. I built it in about two weeks, learning
-              JavaScript, React, Next.js, SQL, and full-stack architecture from
-              scratch simultaneously while building and deploying the product...
+              Heimdall is my first full-stack web application, built as a
+              competitive development project —{" "}
+              <span className="text-[#00F0FF]">HackMesa</span> got cancelled
+              before I could compete, so I shipped it anyway. I built it in
+              about two weeks, learning JavaScript, React, Next.js, SQL, and
+              full-stack architecture from scratch simultaneously while building
+              and deploying the product.
             </p>
             <p>
               No templates, no tutorials, just 2 laptops and a ton of coffee.
@@ -102,13 +105,10 @@ export default function About() {
               that looks at what you hand it and tells you the truth.
             </p>
             <p>
-              Ill be honest, I built this project for fun and to learn, not
-              necessarily to solve a real problem. But if it can help even one
-              person avoid a phishing scam, that would be absolutely awesome. I
-              have some future plans of definitely adding more features, things
-              like file uploads, password strength and leak checks, potentially
-              even a browser extension. But for now, this is Heimdall. My first
-              full-stack project, Thanks for reading :){" "}
+              I built this to learn full-stack development under real pressure.
+              HackMesa got cancelled. I deployed it anyway. That felt like the
+              right call. Future plans include file uploads, password strength
+              and leak checks, and potentially a browser extension.
             </p>
           </div>
         </motion.div>
@@ -180,8 +180,8 @@ export default function About() {
           </h2>
           <p className="text-white font-medium text-lg mb-1">Aelan Valdez</p>
           <p className="text-[#64748B] text-sm mb-6">
-            Cybersecurity & Networking Major · Part Time Technician · ThinkPad·
-            Enthusiast · Soon to be HackMesa Champion
+            Cybersecurity & Networking Major · Advanced Repair Agent · ThinkPad
+            Enthusiast · Ships Anyway
           </p>
           <div className="flex gap-4">
             <a
@@ -216,8 +216,8 @@ export default function About() {
           transition={{ duration: 0.5, delay: 0.55 }}
         >
           <p className="text-[#64748B] text-xs font-mono">
-            Built for HackMesa 2026 · First full-stack project · Powered by a
-            fried Thinkpad and too much coffee
+            First full-stack project · Deployed anyway · Powered by a fried
+            ThinkPad and too much coffee
           </p>
         </motion.div>
       </div>
