@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { createClient as createAdminClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import DeleteReportButton from "@/components/DeleteReportButton";
 import { AnimatedSection } from "@/components/AnimatedSection";
@@ -13,6 +14,12 @@ export default async function ReportPage({
   const { id } = await params;
   const supabase = await createClient();
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) redirect("/login");
+
   const { data: report } = await supabase
     .from("reports")
     .select("*")
@@ -20,6 +27,8 @@ export default async function ReportPage({
     .single();
 
   if (!report) notFound();
+
+  if (report.user_id !== user.id) notFound();
 
   const adminSupabase = createAdminClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

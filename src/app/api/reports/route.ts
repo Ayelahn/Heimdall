@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
 
   if (!checkRateLimit(user.id)) {
     return NextResponse.json(
-      { error: "Rate limit exceeded. Maximum 10 reports per hour." },
+      { error: "Rate limit exceeded. Maximum 10 reports per day." },
       { status: 429 },
     );
   }
