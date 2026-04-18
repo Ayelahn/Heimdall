@@ -82,8 +82,7 @@ export default function About() {
               Hey guys, my name is{" "}
               <span className="text-white font-medium">Aelan Valdez</span>.
               Currently a Cybersecurity & Networking major working part-time as
-              a Geek Squad Advanced Repair Agent. Thanks for checking out my
-              project.
+              a Geek Squad Lead Technician. Thanks for checking out my project.
             </p>
             <p>
               Heimdall is my first full-stack web application, built as a
@@ -180,7 +179,7 @@ export default function About() {
           </h2>
           <p className="text-white font-medium text-lg mb-1">Aelan Valdez</p>
           <p className="text-[#64748B] text-sm mb-6">
-            Cybersecurity & Networking Major · Advanced Repair Agent · ThinkPad
+            Cybersecurity & Networking Major · Lead Technician · ThinkPad
             Enthusiast · Ships Anyway
           </p>
           <div className="flex gap-4">
